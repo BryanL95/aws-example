@@ -21,3 +21,5 @@ $router->get('/shop', 'ShopController@index');
 $router->post('/images', 'ShopController@upload');
 $router->get('/my-image', 'ShopController@download');
 $router->get('/move', 'ShopController@move');
+$router->get('/list', 'ShopController@getObjects');
+$router->get('/my-object', 'ShopController@getObject');
