@@ -23,3 +23,6 @@ $router->get('/my-image', 'ShopController@download');
 $router->get('/move', 'ShopController@move');
 $router->get('/list', 'ShopController@getObjects');
 $router->get('/my-object', 'ShopController@getObject');
+
+$router->get('/upload', 'ShopController@uploadImg');
+$router->get('/download', 'ShopController@downloadBatch');

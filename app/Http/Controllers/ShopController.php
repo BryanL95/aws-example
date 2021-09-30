@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
+use RecursiveIteratorIterator;
+use RecursiveDirectoryIterator;
 use Aws\S3\S3Client;
+use Aws\S3\Transfer;
 
 class ShopController extends Controller
 {
@@ -82,5 +85,44 @@ class ShopController extends Controller
         ]);
         //ContentLength
         return response()->json($result['ContentLength']);
+    }
+
+    public function uploadImg()
+    {
+        $client = new S3Client([
+            'version'     => '2006-03-01',
+            'region'      => env('AWS_REGION'),
+            'credentials' => [
+                'key'      => env('AWS_KEY'),
+                'secret'   => env('AWS_SECRET'),
+            ]
+        ]);
+
+        $result = $client->putObject([
+            'Bucket' => env('AWS_BUCKET'),
+            'Key' => 'new-folder/jajaja.jpg',
+            'SourceFile' => '../public/images/jajaja.jpg'
+        ]);
+        //ContentLength
+        return response()->json($result['ObjectURL']);
+    }
+
+    public function downloadBatch()
+    {
+        $client = new S3Client([
+            'version'     => '2006-03-01',
+            'region'      => env('AWS_REGION'),
+            'credentials' => [
+                'key'      => env('AWS_KEY'),
+                'secret'   => env('AWS_SECRET'),
+            ]
+        ]);
+
+        $source = 's3://' . env('AWS_BUCKET') . '/exported';
+        $target = 'C:\Sites\shop\public\images';
+        $manager = new Transfer($client, $source, $target);
+        $manager->transfer();
+
+        return response()->json(['msg' => 'aca']);
     }
 }
